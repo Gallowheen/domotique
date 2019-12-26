@@ -5,9 +5,18 @@ import { Component } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
+
 export class AppComponent {
   title = 'this is a test';
   isAuth = false;
+  lastUpdate = new Promise((resolve) => {
+    const date = new Date();
+    setTimeout(
+      () => {
+        resolve(date);
+      }, 2000
+    );
+  });
 
   // appareilOne = 'Machine à laver';
   // appareilTwo = 'Frigo';
@@ -30,8 +39,6 @@ export class AppComponent {
       timeAlive : 10
     }
   ]
-
-
 
   constructor() {
     setTimeout(
