@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AppareilService } from './services/appareil.service';
+import { interval } from 'rxjs';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-root',
@@ -6,49 +10,35 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'this is a test';
-  isAuth = false;
-  lastUpdate = new Promise((resolve) => {
-    const date = new Date();
-    setTimeout(
-      () => {
-        resolve(date);
-      }, 2000
-    );
-  });
+  secondes: number;
+  counterSubscription: Subscription;
 
   // appareilOne = 'Machine à laver';
   // appareilTwo = 'Frigo';
   // appareilThree = 'Ordinateur';
 
-  appareils = [
-    {
-      name: 'Machnine à laver',
-      status: 'éteint',
-      timeAlive : 100
-    },
-    {
-      name: 'Frigo',
-      status: 'allumé',
-      timeAlive : 200
-    },
-    {
-      name: 'Ordinateur',
-      status: 'éteint',
-      timeAlive : 10
-    }
-  ]
+  constructor(private appareilService : AppareilService) {
+   
+  }
 
-  constructor() {
-    setTimeout(
+  ngOnInit() {
+    const counter = interval(1000);
+    this.counterSubscription = counter.subscribe(
+      (value) => {
+        this.secondes = value;
+      },
+      (error) => {
+        console.log('Uh-oh, an error occurred! : ' + error);
+      },
       () => {
-        this.isAuth = true;
-      }, 4000
+        console.log('Observable complete!');
+      }
     );
   }
 
-  onAllumer() {
-    console.log('On allume tout !');
+  ngOnDestroy() {
+    this.counterSubscription.unsubscribe();
   }
 }
